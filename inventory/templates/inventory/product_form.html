@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ action|default:"商品表单" }} - 库存管理系统</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn {
+            border-radius: 6px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .field-error {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545;
+        }
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-box-seam"></i> 库存管理系统
+            </a>
+
+            <div class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="/logout/">
+                        <i class="bi bi-box-arrow-right"></i> 退出登录 ({{ user.username }})
+                    </a>
+                {% else %}
+                    <a class="nav-link" href="/login/">
+                        <i class="bi bi-box-arrow-in-right"></i> 登录
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- 消息提示 -->
+    {% if messages %}
+        <div class="container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>{{ action|default:"商品表单" }}</h2>
+            <a href="/products/" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> 返回列表
+            </a>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-{% if product %}pencil{% else %}plus-circle{% endif %}"></i>
+                            {{ action|default:"商品信息" }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- 表单整体错误提示 -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <strong>表单验证错误：</strong>
+                                <ul class="mb-0 mt-2">
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <form method="post" class="needs-validation" novalidate>
+                            {% csrf_token %}
+
+                            <!-- 基本信息 -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">基本信息</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label required-field">{{ form.name.label }}</label>
+                                                {{ form.name }}
+                                                {% if form.name.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.name.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label required-field">{{ form.sku.label }}</label>
+                                                {{ form.sku }}
+                                                {% if form.sku.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.sku.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-text">商品的唯一标识码，只能包含字母、数字、连字符和下划线</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">{{ form.category.label }}</label>
+                                                {{ form.category }}
+                                                {% if form.category.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.category.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">{{ form.is_active.label }}</label>
+                                                <div class="form-check">
+                                                    {{ form.is_active }}
+                                                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                                        启用该商品
+                                                    </label>
+                                                </div>
+                                                {% if form.is_active.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.is_active.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ form.description.label }}</label>
+                                        {{ form.description }}
+                                        {% if form.description.errors %}
+                                            <div class="field-error">
+                                                {% for error in form.description.errors %}
+                                                    <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 库存信息 -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">库存信息</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label required-field">{{ form.quantity.label }}</label>
+                                                {{ form.quantity }}
+                                                {% if form.quantity.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.quantity.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">{{ form.low_stock_threshold.label }}</label>
+                                                {{ form.low_stock_threshold }}
+                                                {% if form.low_stock_threshold.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.low_stock_threshold.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-text">当库存低于此值时会显示预警</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 价格信息 -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">价格信息</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label required-field">{{ form.price.label }}</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">¥</span>
+                                                    {{ form.price }}
+                                                </div>
+                                                {% if form.price.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.price.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">{{ form.cost_price.label }}</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">¥</span>
+                                                    {{ form.cost_price }}
+                                                </div>
+                                                {% if form.cost_price.errors %}
+                                                    <div class="field-error">
+                                                        {% for error in form.cost_price.errors %}
+                                                            <div><i class="bi bi-exclamation-circle"></i> {{ error }}</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-text">用于计算利润，可选填</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="/products/" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> 取消
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> 保存商品
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-light text-center py-3 mt-5">
+        <div class="container">
+            <small class="text-muted">© 2024 库存管理系统 | 版本 1.0</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 自动隐藏提示消息
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                setTimeout(() => {
+                    try {
+                        bsAlert.close();
+                    } catch(e) {}
+                }, 5000);
+            });
+        }, 100);
+
+        // 表单验证和错误处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.needs-validation');
+            const inputs = form.querySelectorAll('input, select, textarea');
+
+            // 添加实时验证
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        validateField(this);
+                    }
+                });
+            });
+
+            // 表单提交验证
+            form.addEventListener('submit', function(event) {
+                let isValid = true;
+
+                // 验证所有必填字段
+                inputs.forEach(input => {
+                    if (!validateField(input)) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    // 滚动到第一个错误字段
+                    const firstError = form.querySelector('.is-invalid');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+
+                    // 显示错误提示
+                    showAlert('请检查表单中的错误信息并修正后重试', 'danger');
+                }
+
+                form.classList.add('was-validated');
+            });
+
+            // 字段验证函数
+            function validateField(field) {
+                const value = field.value.trim();
+                let isValid = true;
+
+                // 移除之前的验证状态
+                field.classList.remove('is-valid', 'is-invalid');
+
+                // 必填字段验证
+                if (field.hasAttribute('required') && !value) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else if (field.type === 'number' && value) {
+                    // 数字字段验证
+                    const num = parseFloat(value);
+                    const min = parseFloat(field.getAttribute('min'));
+                    const max = parseFloat(field.getAttribute('max'));
+
+                    if (isNaN(num) || (min !== null && num < min) || (max !== null && num > max)) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                } else if (field.type === 'email' && value) {
+                    // 邮箱验证
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                }
+
+                if (isValid && value) {
+                    field.classList.add('is-valid');
+                }
+
+                return isValid;
+            }
+
+            // 显示提示信息
+            function showAlert(message, type = 'info') {
+                const alertContainer = document.querySelector('.container');
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+                alertDiv.innerHTML = `
+                    <i class="bi bi-exclamation-triangle"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+
+                alertContainer.insertBefore(alertDiv, alertContainer.firstChild.nextSibling);
+
+                // 自动隐藏
+                setTimeout(() => {
+                    try {
+                        const bsAlert = new bootstrap.Alert(alertDiv);
+                        bsAlert.close();
+                    } catch(e) {}
+                }, 5000);
+            }
+
+            // SKU字段特殊处理
+            const skuField = document.querySelector('input[name="sku"]');
+            if (skuField) {
+                skuField.addEventListener('input', function() {
+                    // 转换为大写并移除无效字符
+                    let value = this.value.toUpperCase().replace(/[^A-Z0-9\-_]/g, '');
+                    if (value !== this.value) {
+                        this.value = value;
+                    }
+                });
+            }
+
+            // 价格字段格式化
+            const priceFields = document.querySelectorAll('input[name="price"], input[name="cost_price"]');
+            priceFields.forEach(field => {
+                field.addEventListener('blur', function() {
+                    if (this.value) {
+                        const value = parseFloat(this.value);
+                        if (!isNaN(value)) {
+                            this.value = value.toFixed(2);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

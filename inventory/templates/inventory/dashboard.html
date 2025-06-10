@@ -1,0 +1,378 @@
+{% extends 'inventory/base.html' %}
+{% load humanize %}
+
+{% block title %}仪表板 - 库存管理系统{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">仪表板</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">
+        <i class="bi bi-speedometer2 text-primary"></i>
+        仪表板
+    </h1>
+    <div>
+        <button class="btn btn-outline-primary btn-sm" onclick="refreshDashboard()">
+            <i class="bi bi-arrow-clockwise"></i> 刷新数据
+        </button>
+    </div>
+</div>
+
+<!-- 统计卡片 -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body text-white">
+                <div class="stat-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <div class="stat-number">{{ total_products|intcomma }}</div>
+                <div class="stat-label">总商品数</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card bg-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="card-body text-white">
+                <div class="stat-icon">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="stat-number">{{ low_stock_products|intcomma }}</div>
+                <div class="stat-label">库存不足</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card bg-gradient" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="card-body text-white">
+                <div class="stat-icon">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+                <div class="stat-number">{{ out_of_stock_products|intcomma }}</div>
+                <div class="stat-label">缺货商品</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card bg-gradient" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div class="card-body text-white">
+                <div class="stat-icon">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="stat-number">¥{{ total_stock_value|floatformat:0|intcomma }}</div>
+                <div class="stat-label">库存总价值</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- 库存状态图表 -->
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pie-chart text-primary"></i>
+                    库存状态分布
+                </h5>
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-outline-primary active" onclick="switchChart('pie')">饼图</button>
+                    <button type="button" class="btn btn-outline-primary" onclick="switchChart('bar')">柱状图</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="stockStatusChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 快速操作 -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-lightning text-warning"></i>
+                    快速操作
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <a href="{% url 'inventory:product_create' %}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> 添加商品
+                    </a>
+                    <a href="{% url 'inventory:category_create' %}" class="btn btn-success">
+                        <i class="bi bi-tags"></i> 添加分类
+                    </a>
+                    <a href="{% url 'inventory:export_products' %}" class="btn btn-info">
+                        <i class="bi bi-download"></i> 导出数据
+                    </a>
+                    <a href="{% url 'inventory:stock_report' %}" class="btn btn-warning">
+                        <i class="bi bi-graph-up"></i> 查看报告
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-4">
+    <!-- 库存预警 -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-exclamation-triangle text-warning"></i>
+                    库存预警 ({{ low_stock_items|length }})
+                </h5>
+                <a href="{% url 'inventory:product_list' %}?stock_status=low_stock" class="btn btn-sm btn-outline-primary">
+                    查看全部
+                </a>
+            </div>
+            <div class="card-body">
+                {% if low_stock_items %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>商品名称</th>
+                                    <th>当前库存</th>
+                                    <th>预警值</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in low_stock_items %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ item.name }}</strong><br>
+                                        <small class="text-muted">{{ item.sku }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if item.quantity == 0 %}bg-danger{% else %}bg-warning{% endif %}">
+                                            {{ item.quantity }}
+                                        </span>
+                                    </td>
+                                    <td>{{ item.low_stock_threshold }}</td>
+                                    <td>
+                                        <a href="{% url 'inventory:stock_adjustment' item.pk %}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            调整
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2">所有商品库存充足</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- 最近活动 -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history text-info"></i>
+                    最近活动
+                </h5>
+                <a href="{% url 'inventory:movement_history' %}" class="btn btn-sm btn-outline-primary">
+                    查看全部
+                </a>
+            </div>
+            <div class="card-body">
+                {% if recent_movements %}
+                    <div class="activity-list">
+                        {% for movement in recent_movements %}
+                        <div class="activity-item d-flex align-items-start mb-3">
+                            <div class="activity-icon me-3">
+                                <i class="bi bi-{% if movement.movement_type == 'in' %}arrow-up-circle text-success{% elif movement.movement_type == 'out' %}arrow-down-circle text-danger{% else %}arrow-left-right text-primary{% endif %}"></i>
+                            </div>
+                            <div class="activity-content flex-grow-1">
+                                <div class="activity-title">
+                                    <strong>{{ movement.product.name }}</strong>
+                                    <span class="badge bg-secondary ms-2">{{ movement.get_movement_type_display }}</span>
+                                </div>
+                                <div class="activity-details text-muted small">
+                                    数量变化: {{ movement.quantity|stringformat:"+d" }} 
+                                    ({{ movement.old_quantity }} → {{ movement.new_quantity }})
+                                </div>
+                                <div class="activity-time text-muted small">
+                                    {{ movement.created_at|naturaltime }}
+                                    {% if movement.created_by %}
+                                        · {{ movement.created_by.username }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-clock text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2">暂无活动记录</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 分类统计 -->
+<div class="row g-4 mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-tags text-success"></i>
+                    分类统计
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if category_stats %}
+                    <div class="row">
+                        {% for category in category_stats %}
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <div class="text-center p-3 border rounded">
+                                <div class="h4 text-primary mb-1">{{ category.product_count }}</div>
+                                <div class="small text-muted">{{ category.name|default:"未分类" }}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">暂无分类数据</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // 图表数据
+    const stockStatusData = {
+        labels: ['库存充足', '库存不足', '缺货'],
+        datasets: [{
+            data: [
+                {{ stock_status.in_stock }},
+                {{ stock_status.low_stock }},
+                {{ stock_status.out_of_stock }}
+            ],
+            backgroundColor: [
+                '#28a745',
+                '#ffc107', 
+                '#dc3545'
+            ],
+            borderWidth: 0
+        }]
+    };
+    
+    let currentChart = null;
+    
+    // 初始化图表
+    function initChart() {
+        const ctx = document.getElementById('stockStatusChart').getContext('2d');
+        
+        currentChart = new Chart(ctx, {
+            type: 'pie',
+            data: stockStatusData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.parsed} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // 切换图表类型
+    function switchChart(type) {
+        if (currentChart) {
+            currentChart.destroy();
+        }
+        
+        const ctx = document.getElementById('stockStatusChart').getContext('2d');
+        const config = {
+            type: type,
+            data: stockStatusData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: type === 'pie' ? 'bottom' : 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        };
+        
+        if (type === 'bar') {
+            config.options.scales = {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            };
+        }
+        
+        currentChart = new Chart(ctx, config);
+        
+        // 更新按钮状态
+        document.querySelectorAll('.btn-group button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+    
+    // 刷新仪表板
+    function refreshDashboard() {
+        showLoading();
+        location.reload();
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        initChart();
+        
+        // 自动刷新（可选）
+        // setInterval(refreshDashboard, 300000); // 5分钟刷新一次
+    });
+</script>
+{% endblock %}

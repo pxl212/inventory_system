@@ -1,0 +1,211 @@
+{% extends 'inventory/base.html' %}
+
+{% block title %}商品列表 - 库存管理系统{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>商品列表</h2>
+    <a href="/products/create/" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> 添加商品
+    </a>
+</div>
+
+<!-- 统计卡片 -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h3>{{ stats.total_products }}</h3>
+                <small>总商品数</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <h3>{{ stats.low_stock_products }}</h3>
+                <small>库存不足</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body text-center">
+                <h3>{{ stats.out_of_stock_products }}</h3>
+                <small>缺货商品</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 搜索和过滤 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="q" class="form-control"
+                       placeholder="搜索商品名称或SKU" value="{{ current_filters.q }}">
+            </div>
+            <div class="col-md-3">
+                <select name="stock_status" class="form-select">
+                    <option value="">全部状态</option>
+                    <option value="in_stock" {% if current_filters.stock_status == 'in_stock' %}selected{% endif %}>库存充足</option>
+                    <option value="low_stock" {% if current_filters.stock_status == 'low_stock' %}selected{% endif %}>库存不足</option>
+                    <option value="out_of_stock" {% if current_filters.stock_status == 'out_of_stock' %}selected{% endif %}>缺货</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-search"></i> 搜索
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 商品表格 -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">商品列表</h5>
+        <div>
+            <a href="/export/products/" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-download"></i> 导出CSV
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <a href="?{% if sort == 'name' %}-{% endif %}name&q={{ query }}"
+                               class="text-decoration-none text-dark">
+                                商品名称
+                                {% if sort == 'name' %}<i class="bi bi-arrow-up"></i>
+                                {% elif sort == '-name' %}<i class="bi bi-arrow-down"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?{% if sort == 'sku' %}-{% endif %}sku&q={{ query }}"
+                               class="text-decoration-none text-dark">
+                                商品编码
+                                {% if sort == 'sku' %}<i class="bi bi-arrow-up"></i>
+                                {% elif sort == '-sku' %}<i class="bi bi-arrow-down"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?{% if sort == 'quantity' %}-{% endif %}quantity&q={{ query }}"
+                               class="text-decoration-none text-dark">
+                                库存数量
+                                {% if sort == 'quantity' %}<i class="bi bi-arrow-up"></i>
+                                {% elif sort == '-quantity' %}<i class="bi bi-arrow-down"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="?{% if sort == 'price' %}-{% endif %}price&q={{ query }}"
+                               class="text-decoration-none text-dark">
+                                价格（元）
+                                {% if sort == 'price' %}<i class="bi bi-arrow-up"></i>
+                                {% elif sort == '-price' %}<i class="bi bi-arrow-down"></i>{% endif %}
+                            </a>
+                        </th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>
+                            <a href="/products/{{ product.pk }}/"
+                               class="text-decoration-none">
+                                <strong>{{ product.name }}</strong>
+                            </a>
+                        </td>
+                        <td><code>{{ product.sku }}</code></td>
+                        <td>
+                            <span class="badge {% if product.quantity == 0 %}bg-danger{% elif product.is_low_stock %}bg-warning{% else %}bg-success{% endif %}">
+                                {{ product.quantity }}
+                            </span>
+                        </td>
+                        <td>¥{{ product.price }}</td>
+                        <td>
+                            {% if product.quantity == 0 %}
+                                <span class="badge bg-danger">缺货</span>
+                            {% elif product.is_low_stock %}
+                                <span class="badge bg-warning">库存不足</span>
+                            {% else %}
+                                <span class="badge bg-success">库存充足</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="/products/{{ product.pk }}/"
+                                   class="btn btn-outline-primary" title="查看详情">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="/products/{{ product.pk }}/edit/"
+                                   class="btn btn-outline-warning" title="编辑">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="/products/{{ product.pk }}/delete/"
+                                   class="btn btn-outline-danger" title="删除"
+                                   onclick="return confirm('确定要删除这个商品吗？')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            {% if query %}
+                                没有找到匹配的商品
+                            {% else %}
+                                暂无商品数据，<a href="/products/create/" class="text-decoration-none">点击添加第一个商品</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 分页 -->
+{% if products.has_other_pages %}
+<nav aria-label="分页导航" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if products.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ products.previous_page_number }}">
+                    <i class="bi bi-chevron-left"></i> 上一页
+                </a>
+            </li>
+        {% endif %}
+
+        {% for num in products.paginator.page_range %}
+            {% if products.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if products.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ products.next_page_number }}">
+                    下一页 <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

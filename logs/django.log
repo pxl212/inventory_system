@@ -1,0 +1,296 @@
+INFO 2025-06-10 20:09:44,577 autoreload 22900 24876 Watching for file changes with StatReloader
+ERROR 2025-06-10 20:09:46,458 log 22900 16572 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+sqlite3.OperationalError: no such column: inventory_product.is_active
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\inventory\views.py", line 58, in dashboard
+    total_products = Product.objects.filter(is_active=True).count()
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\models\query.py", line 604, in count
+    return self.query.get_count(using=self.db)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\models\sql\query.py", line 644, in get_count
+    return obj.get_aggregation(using, {"__count": Count("*")})["__count"]
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\models\sql\query.py", line 626, in get_aggregation
+    result = compiler.execute_sql(SINGLE)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+django.db.utils.OperationalError: no such column: inventory_product.is_active
+ERROR 2025-06-10 20:09:46,462 basehttp 22900 16572 "GET / HTTP/1.1" 500 148518
+INFO 2025-06-10 20:25:28,877 autoreload 8128 6140 Watching for file changes with StatReloader
+ERROR 2025-06-10 20:25:30,495 log 8128 22932 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\inventory\views.py", line 224, in product_list
+    return render(request, 'inventory/product_list.html', context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'product_create' not found. 'product_create' is not a valid view function or pattern name.
+ERROR 2025-06-10 20:25:30,502 basehttp 8128 22932 "GET / HTTP/1.1" 500 184471
+INFO 2025-06-10 20:25:40,199 autoreload 11324 4168 Watching for file changes with StatReloader
+ERROR 2025-06-10 20:25:41,660 log 8128 22932 Internal Server Error: /
+Traceback (most recent call last):
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\inventory\views.py", line 224, in product_list
+    return render(request, 'inventory/product_list.html', context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'product_create' not found. 'product_create' is not a valid view function or pattern name.
+ERROR 2025-06-10 20:25:41,663 basehttp 8128 22932 "GET / HTTP/1.1" 500 184471
+INFO 2025-06-10 20:36:21,244 autoreload 13724 4140 Watching for file changes with StatReloader
+INFO 2025-06-10 20:36:24,983 basehttp 13724 10720 "GET / HTTP/1.1" 200 8452
+ERROR 2025-06-10 20:36:35,183 log 13724 10720 Internal Server Error: /products/create/
+Traceback (most recent call last):
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\inventory\views.py", line 262, in product_create
+    return render(request, 'inventory/product_form.html', {
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 1016, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'product_list' not found. 'product_list' is not a valid view function or pattern name.
+ERROR 2025-06-10 20:36:35,193 basehttp 13724 10720 "GET /products/create/ HTTP/1.1" 500 181962
+INFO 2025-06-10 20:43:16,829 autoreload 12184 11000 Watching for file changes with StatReloader
+INFO 2025-06-10 20:43:21,473 basehttp 12184 4128 "GET /products/create/ HTTP/1.1" 200 6937
+INFO 2025-06-10 20:43:42,152 basehttp 12184 4128 "POST /products/create/ HTTP/1.1" 200 7395
+INFO 2025-06-10 20:43:44,065 basehttp 12184 4128 "POST /products/create/ HTTP/1.1" 200 7395
+INFO 2025-06-10 20:43:45,200 basehttp 12184 4128 "GET /products/ HTTP/1.1" 200 8452
+INFO 2025-06-10 20:43:46,857 basehttp 12184 4128 "GET /products/ HTTP/1.1" 200 8452
+INFO 2025-06-10 20:43:53,292 basehttp 12184 4128 "GET /products/create/ HTTP/1.1" 200 6937
+INFO 2025-06-10 20:44:05,017 basehttp 12184 4128 "POST /products/create/ HTTP/1.1" 200 7390
+INFO 2025-06-10 20:44:19,129 basehttp 12184 4128 "POST /products/create/ HTTP/1.1" 200 7391
+INFO 2025-06-10 20:44:26,238 basehttp 12184 4128 "POST /products/create/ HTTP/1.1" 200 7391
+INFO 2025-06-10 20:51:45,852 basehttp 12184 24700 "POST /products/create/ HTTP/1.1" 200 7394
+INFO 2025-06-10 20:51:52,275 basehttp 12184 24700 "POST /products/create/ HTTP/1.1" 200 7394
+INFO 2025-06-10 20:52:03,976 basehttp 12184 24700 "POST /products/create/ HTTP/1.1" 200 7395
+INFO 2025-06-10 20:52:10,742 basehttp 12184 24700 "POST /products/create/ HTTP/1.1" 200 7406
+INFO 2025-06-10 20:52:24,633 basehttp 12184 24700 "POST /products/create/ HTTP/1.1" 200 7413
+INFO 2025-06-10 20:52:36,776 basehttp 12184 24700 "GET /products/ HTTP/1.1" 200 8452
+INFO 2025-06-10 20:52:40,140 basehttp 12184 24700 "GET /products/create/ HTTP/1.1" 200 6937
+INFO 2025-06-10 20:54:26,997 autoreload 23604 4156 Watching for file changes with StatReloader
+INFO 2025-06-10 20:54:37,173 basehttp 23604 13708 "POST /products/create/ HTTP/1.1" 200 7394
+INFO 2025-06-10 20:54:44,298 basehttp 23604 13708 "POST /products/create/ HTTP/1.1" 200 7394
+INFO 2025-06-10 20:54:45,396 basehttp 23604 13708 "POST /products/create/ HTTP/1.1" 200 7394
+INFO 2025-06-10 20:54:45,871 basehttp 23604 13708 "POST /products/create/ HTTP/1.1" 200 7394
+INFO 2025-06-10 20:59:15,747 basehttp 23604 17628 "POST /products/create/ HTTP/1.1" 200 7394
+INFO 2025-06-10 21:10:16,987 autoreload 24788 18408 Watching for file changes with StatReloader
+INFO 2025-06-10 21:10:21,217 basehttp 24788 24724 "POST /products/create/ HTTP/1.1" 302 0
+ERROR 2025-06-10 21:10:21,269 log 24788 24724 Internal Server Error: /products/1/
+Traceback (most recent call last):
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pycharm\python应用开发\inventory_system\inventory\views.py", line 242, in product_detail
+    return render(request, 'inventory/product_detail.html', context)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\backends\django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 489, in parse
+    raise self.error(token, e)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 487, in parse
+    filter_expression = self.compile_filter(token.contents)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 705, in __init__
+    filter_func = parser.find_filter(filter_name)
+  File "D:\Pycharm\python应用开发\inventory_system\.venv\lib\site-packages\django\template\base.py", line 615, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'mul'
+ERROR 2025-06-10 21:10:21,274 basehttp 24788 24724 "GET /products/1/ HTTP/1.1" 500 190124
+INFO 2025-06-10 21:12:00,512 basehttp 24788 24724 "GET /products/1/ HTTP/1.1" 200 10076
+INFO 2025-06-10 21:12:05,396 basehttp 24788 24724 "GET /products/ HTTP/1.1" 200 8452
+INFO 2025-06-10 21:12:06,852 basehttp 24788 24724 "GET /products/create/ HTTP/1.1" 200 17095
+INFO 2025-06-10 21:12:27,608 basehttp 24788 24724 "POST /products/create/ HTTP/1.1" 302 0
+INFO 2025-06-10 21:12:27,619 basehttp 24788 24724 "GET /products/2/ HTTP/1.1" 200 10065
+INFO 2025-06-10 21:12:36,326 basehttp 24788 24724 "GET /products/ HTTP/1.1" 200 9879
+INFO 2025-06-10 21:12:38,458 basehttp 24788 24724 "GET /products/create/ HTTP/1.1" 200 17095
+INFO 2025-06-10 21:12:47,779 basehttp 24788 24724 "POST /products/create/ HTTP/1.1" 302 0
+INFO 2025-06-10 21:12:47,789 basehttp 24788 24724 "GET /products/3/ HTTP/1.1" 200 10065
+INFO 2025-06-10 21:20:44,850 autoreload 24788 18408 D:\Pycharm\python应用开发\inventory_system\inventory\views.py changed, reloading.
+INFO 2025-06-10 21:20:45,730 autoreload 10244 22752 Watching for file changes with StatReloader
+INFO 2025-06-10 21:20:53,633 basehttp 10244 24560 "GET /products/ HTTP/1.1" 200 13503
+INFO 2025-06-10 21:20:59,590 basehttp 10244 24560 "GET /products/create/ HTTP/1.1" 200 17095
+INFO 2025-06-10 21:21:10,057 basehttp 10244 24560 "POST /products/create/ HTTP/1.1" 302 0
+INFO 2025-06-10 21:21:10,070 basehttp 10244 24560 "GET /products/ HTTP/1.1" 200 15724
+INFO 2025-06-10 21:21:17,146 basehttp 10244 24560 "GET /products/4/ HTTP/1.1" 200 9677
+INFO 2025-06-10 21:21:21,954 basehttp 10244 24560 "GET /products/ HTTP/1.1" 200 15315
+INFO 2025-06-10 21:21:24,521 basehttp 10244 24560 "GET /products/4/edit/ HTTP/1.1" 200 17139
+INFO 2025-06-10 21:21:27,581 basehttp 10244 24560 "GET /products/ HTTP/1.1" 200 15315
+INFO 2025-06-10 21:21:30,778 basehttp 10244 24560 "GET /products/4/ HTTP/1.1" 200 9677
+INFO 2025-06-10 21:21:34,401 basehttp 10244 24560 "GET /products/4/ HTTP/1.1" 200 9677
+INFO 2025-06-10 21:21:35,304 basehttp 10244 24560 "GET /products/4/ HTTP/1.1" 200 9677
+INFO 2025-06-10 21:21:36,502 basehttp 10244 24560 "GET /products/4/ HTTP/1.1" 200 9677
+INFO 2025-06-10 21:21:38,554 basehttp 10244 24560 "GET /products/4/ HTTP/1.1" 200 9677
+INFO 2025-06-10 21:21:39,139 basehttp 10244 24560 "GET /products/ HTTP/1.1" 200 15315
